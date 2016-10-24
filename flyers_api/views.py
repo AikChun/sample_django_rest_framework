@@ -1,3 +1,5 @@
+import django_filters
+from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User, Group
 from .models import Flyer
 from rest_framework import viewsets
@@ -21,21 +23,18 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset         = Group.objects.all()
     serializer_class = GroupSerializer
 
-class FlyerList(APIView):
+class FlyerFilter(django_filters.rest_framework.FilterSet):
+    state = django_filters.CharFilter(name="state", lookup_expr='iexact');
+    class Meta:
+        model = Flyer
+        fields = ['street', 'city', 'state',]
+
+class FlyerViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    def get(self, request):
-        flyers = Flyer.objects.all()
-        serializer = FlyerSerializer(flyers, many=True)
-        return Response(serializer.data)
-
-    def post(self):
-        pass
-
-
-
-
-
-
+    queryset         = Flyer.objects.all()
+    serializer_class = FlyerSerializer
+    filter_backends  = (DjangoFilterBackend,)
+    filter_class     = FlyerFilter
 

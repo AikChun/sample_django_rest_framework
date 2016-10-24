@@ -22,13 +22,14 @@ from rest_framework_swagger.views import get_swagger_view
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
+router.register(r'flyers', views.FlyerViewSet)
 
 
 schema_view = get_swagger_view(title='Flyer API')
 
 urlpatterns = [
     #url(r'^api/', include('flyers_api.urls', namespace='flyers_api')),
-    url(r'^api/flyers/', views.FlyerList.as_view()),
+    url(r'^api/', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^$', schema_view)
